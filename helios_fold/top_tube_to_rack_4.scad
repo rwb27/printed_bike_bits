@@ -1,7 +1,7 @@
 use <utilities.scad>;
 
 t = 3;
-h = 12;
+h = 15;
 inner_r = 22;
 rack_r = 10.5/2+0.2;
 
@@ -41,13 +41,13 @@ union(){
         }
         
         //clearance for velcro strap round the inside
-//        intersection(){
-//            translate([0,0,h/2]) cylinder(r=inner_r+1,h=h/2,center=true);
-//            rotate(-90) translate([7,12,-1]) cube(999);
-//        }
+        intersection(){
+            translate([0,0,h/2]) cylinder(r=inner_r+1,h=h/2,center=true);
+            rotate(-90) translate([2,12,-1]) cube(999);
+        }
         //entry/exit for velcro strap to inside of mount
-//        translate([inner_r,-7,h/2]) cube([inner_r,3.5,h/2],center=true);
-//        rotate(-40) translate([inner_r,-rack_r-sin(5)*inner_r,h/2]) cube([2*inner_r,3.5,h/2],center=true);
+        translate([inner_r,-2,h/2]) cube([inner_r,3.5,h/2],center=true);
+        rotate(-40) translate([inner_r,-rack_r-sin(5)*inner_r,h/2]) cube([2*inner_r,3.5,h/2],center=true);
 	}
     
 }
