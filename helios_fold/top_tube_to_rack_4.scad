@@ -2,7 +2,7 @@ use <utilities.scad>;
 
 t = 3;
 h = 15;
-inner_r = 22;
+inner_r = 22+0.4;
 rack_r = 10.5/2+0.2;
 
 rack = [inner_r+2,-inner_r+3,0];
