@@ -66,5 +66,30 @@ module guard_ring(){
     }
 }
 
+module wedge_144(){
+    union(){
+        rotate(72) cube(999);
+        rotate(90-72) cube(999);
+    }
+}
+
 //chainring();
-guard_ring();
+
+intersection(){
+    rotate([0,180,0]) union(){
+    
+        difference(){
+            guard_ring();
+            wedge_144();
+        }
+
+        translate([0,3,0])
+        intersection(){
+            guard_ring();
+            wedge_144();
+        }
+    }
+    
+    //cylinder(r=999, h=chainring_t+2, center=true); //test fit of inner_r
+    translate([0,-999,0]) cube([10,999*2,999],center=true);
+}
