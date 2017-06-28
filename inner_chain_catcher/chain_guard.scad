@@ -10,16 +10,19 @@ use <utilities.scad>; //this can be found in the OpenFlexure Microscope reposito
 d=0.05;
 
 chainring_t = 2; //thickness of chainring
-chain_t = 7.1 + 2; //thickness (width) of chain
+chain_t = 7.1; //thickness (width) of chain
+echo("step height (ring to chain edge)",(chain_t-chainring_t)/2);
 n_teeth = 34; //size of chainring
-pitch_r = n_teeth*12.7/(2*3.14); //distance from centre to link pins
+pitch_r = n_teeth*12.7/(2*3.14)/cos(180/n_teeth); //distance from centre to link pins
+echo("pitch_r",pitch_r);
 chain_height = 8.5; //height of chain (size perpendicular to link pins)
-chainring_inner_r = pitch_r - 15; //radius of the cut-out in the chainring
-lug_w = 16; //width of mounting lugs (for the bolts that attach to the spider)
+chainring_inner_r = 97/2-0.3; //radius of the cut-out in the chainring
+lug_w = 16.3; //width of mounting lugs (for the bolts that attach to the spider)
+bolt_d = 12; //diameter of mounting bolt
 bcd = 74; //bolt circle diameter of mounting bolts
 n_bolts = 5;
-outer_r = pitch_r + chain_height; //maximum diameter of the guard (slightly above chain)
-overall_t = 6; //thickness of the whole guard
+outer_r = pitch_r + chain_height-1; //maximum diameter of the guard (slightly above chain)
+overall_t = 4.7; //thickness of the whole guard
 
 //no need to change stuff under here...
 under_chain_r = pitch_r - chain_height/2 - 1; //radius of the part that sits under the chain
@@ -41,27 +44,31 @@ module chainring(extra_r=0){
     
 module guard_ring(){
     difference(){
-        sequential_hull(){
+        sequential_hull($fn=n_teeth*2){
             translate([0,0,0]) cylinder(r=chainring_inner_r, h=d);
             translate([0,0,chainring_t/2]) cylinder(r=chainring_inner_r, h=d);
             translate([0,0,chainring_t/2]) cylinder(r=under_chain_r, h=d);
             translate([0,0,chain_t/2]) cylinder(r=under_chain_r, h=d);
-            translate([0,0,chain_t/2]) cylinder(r=pitch_r, h=d);
-            translate([0,0,overall_t-1]) cylinder(r=outer_r, h=1);
+            translate([0,0,chain_t/2+0.5]) cylinder(r=under_chain_r+0.5, h=d);
+            translate([0,0,chain_t/2+0.5]) cylinder(r=pitch_r, h=d);
+            translate([0,0,overall_t+chainring_t/2-1]) cylinder(r=outer_r, h=1);
         }
         
         //chainring();
         difference(){
             cylinder(r=chainring_inner_r-2, h=999, center=true);
-            for(i=[1:n_bolts]) rotate(i/n_bolts*360) translate([0,999,0]) cube([lug_w,999*2-bcd,999],center=true);
+            for(i=[1:n_bolts]) rotate(i/n_bolts*360) hull(){
+                translate([0,999,0]) cube([lug_w+8,999*2-bcd,999],center=true);
+                translate([0,bcd/2,0]) cylinder(d=lug_w+8,h=999, center=true);
+            }
         }
         
         for(i=[1:n_bolts]) rotate(i/n_bolts*360){
             //cut the locating lip to allow clearance for the spider
-            translate([0,999,0]) cube([lug_w+8,999*2-bcd,chainring_t],center=true);
-            translate([0,bcd/2,0]) cylinder(d=lug_w-3, h=999, center=true); //clearance for mounting bolts
+            translate([0,999,0]) cube([lug_w+9,999*2,chainring_t],center=true);
+            translate([0,bcd/2,0]) cylinder(d=bolt_d, h=999, center=true); //clearance for mounting bolts
             translate([0,chainring_inner_r+5,0]) cylinder(d=3.5, h=999, center=true); //mounting M3 bolts (req. tapping)
-            reflect([1,0,0]) translate([lug_w/2,chainring_inner_r-2-2,0]) cylinder(r=2,h=999,center=true); //c. tie
+            reflect([1,0,0]) translate([lug_w/2+0.8,chainring_inner_r-5,0]) cube([2,4,999],center=true); //c. tie
         }
     }
 }
@@ -90,6 +97,6 @@ intersection(){
         }
     }
     
-    //cylinder(r=999, h=chainring_t+2, center=true); //test fit of inner_r
-    translate([0,-999,0]) cube([10,999*2,999],center=true);
+    //cylinder(r=chainring_inner_r+5, h=chainring_t+2, center=true); //test fit of inner_r
+    //translate([0,-999,0]) cube([10,999*2,999],center=true);
 }
