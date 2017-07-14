@@ -4,8 +4,8 @@ use <utilities.scad>;
 
 rack_r = 10/2;
 t = 1.5;
-c2c = 44; // centre-to-centre distance between rack tubes at bottom
-tube_angle = -atan(1/8);
+c2c = 58; // centre-to-centre distance between rack tubes at bottom
+tube_angle = -atan(0.19);
 plate_t = 3;
 h=14;
 d=0.05;
