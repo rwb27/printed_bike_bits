@@ -4,7 +4,8 @@ use <utilities.scad>;
 
 rack_r = 10/2;
 t = 1.5;
-c2c = 58; // centre-to-centre distance between rack tubes at bottom
+c2c = 56; // centre-to-centre distance between rack tubes at bottom 
+//(56mm for the top bridge on my Velocity (not hybrid) with the thinnest SKS chromoplastic guards on 700c wheels)
 tube_angle = -atan(0.19);
 plate_t = 3;
 h=14;
@@ -41,5 +42,5 @@ difference(){
     rack_frame() translate([0,0,h/2+1.5]) cable_tie(rack_r,center=true);
     
     // nut trap for M6 mudguard mount
-    translate([0,-1,h/2]) rotate([90,0,0]) nut(6, shaft=true);
+    translate([0,rack_r-3,h/2]) rotate([90,0,0]) nut(6, h=999, shaft=true);
 }
